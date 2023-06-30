@@ -8,18 +8,34 @@ function Login() {
 
   const [userName, setUserName] = useState("");
 
-  const client = socketClient.getInstance().getSocketClient();
+  const client = socketClient.getInstance().getSocketClient(userName);
 
+  // const _onUserName = () => {
+  //   client.emit("user joined", {
+  //     userName: userName,
+  //     name: userName,
+  //     email: `${userName}@gmail.com`,
+  //     status: true,
+  //   });
+
+  //   navigate(`/chatchannels/${userName}`);
+  // };
   const _onUserName = () => {
-    client.emit("user joined", {
+    client.emit("user_login", {
       userName: userName,
       name: userName,
       email: `${userName}@gmail.com`,
       status: true,
     });
 
-    navigate(`/chat/${userName}`);
+    navigate(`/chatchannels/${userName}`);
   };
+
+  client.on("user_login", function (data) {
+    // console.log("user data ==>", data);
+
+    localStorage.setItem("@userdata", JSON.stringify(data));
+  });
 
   return (
     <Grid

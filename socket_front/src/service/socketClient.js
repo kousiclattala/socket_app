@@ -12,9 +12,14 @@ export class socketClient {
     return socketClient.socketService;
   }
 
-  getSocketClient() {
+  getSocketClient(userName) {
     if (!socketClient.client) {
-      return (socketClient.client = io("http://localhost:3030/"));
+      return (socketClient.client = io("http://localhost:3030/", {
+        closeOnBeforeunload: true,
+        query: {
+          userName: userName,
+        },
+      }));
     }
 
     return socketClient.client;

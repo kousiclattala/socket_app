@@ -4,22 +4,23 @@ import { List, ListItemText, Typography, Card } from "@mui/material";
 function Messagescreen({ userName, messages, typingUser }) {
   const bottomRef = useRef(null);
 
-  console.log("typing user", typeof typingUser, typingUser);
+  // console.log("messages ===>", messages);
 
-  useEffect(() => {
-    messages.length > 0 && bottomRef.current.scrollIntoView();
-  }, [messages]);
+  // useEffect(() => {
+  //   messages.length > 0 && bottomRef.current.scrollIntoView();
+  // }, [messages]);
 
   return (
     <>
       <List sx={{ width: "100%", bgcolor: "#fff" }}>
-        {messages.map((item) => (
+        {messages.map((item, index) => (
           <div
-            align={item.user === userName ? "right" : "left"}
+            align={item.user.name === userName ? "right" : "left"}
             style={{
               marginTop: 10,
             }}
             ref={bottomRef}
+            key={index}
           >
             <Card
               variant="outlined"
@@ -27,7 +28,8 @@ function Messagescreen({ userName, messages, typingUser }) {
                 width: "30%",
                 paddingLeft: 10,
                 paddingRight: 10,
-                backgroundColor: item.user === userName ? "#4287f5" : "#25539c",
+                backgroundColor:
+                  item.user.name === userName ? "#4287f5" : "#25539c",
               }}
             >
               <ListItemText
@@ -38,12 +40,12 @@ function Messagescreen({ userName, messages, typingUser }) {
                 secondary={
                   <React.Fragment>
                     <Typography
-                      sx={{ display: "inline" }}
+                      sx={{ display: "inline", fontStyle: "italic" }}
                       component="span"
                       variant="body2"
                       color="#fff"
                     >
-                      {item.user}
+                      {item.user.name}
                     </Typography>
                   </React.Fragment>
                 }

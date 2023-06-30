@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Login from "./screens/login";
 import Chatscreen from "./screens/chatscreen";
+import Chats from "./screens/chats";
 
 export default createBrowserRouter([
   {
@@ -15,5 +16,9 @@ export default createBrowserRouter([
   {
     path: "/chat/:userName",
     element: <Chatscreen />,
+  },
+  {
+    path: "/chatchannels/:userName",
+    element: <Chats />,
   },
 ]);

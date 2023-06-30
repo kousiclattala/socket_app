@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Chatusers from "./chatusers";
 import { socketClient } from "../service/socketClient";
 import { useParams } from "react-router-dom";
@@ -78,6 +78,35 @@ function Chatscreen() {
   const [typingUser, setTypingUser] = useState("");
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const _onPageLoad = (e) => {
+      // console.log("on page load");
+      client.emit("user joined", {
+        userName: userName,
+        name: userName,
+        email: `${userName}@gmail.com`,
+        status: true,
+      });
+    };
+
+    if (document.readyState === "complete") {
+      _onPageLoad();
+    } else {
+      window.addEventListener("load", _onPageLoad);
+
+      return () => {
+        window.removeEventListener("load", _onPageLoad);
+      };
+    }
+  }, [client, userName]);
+
+  client.on("disconnect", () => {
+    client.emit("user leave", {
+      userName: userName,
+      status: false,
+    });
+  });
 
   client.on("user joined", function (data) {
     // console.log(data);

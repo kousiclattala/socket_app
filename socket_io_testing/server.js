@@ -10,12 +10,12 @@ const io = new Server(server, {
 });
 
 const mongoose = require("mongoose");
-const {
-  createUser,
-  changeUserStatus,
-  addMessage,
-  getMessages,
-} = require("./controllers/user");
+const { socketServer } = require("./controllers/socket");
+const { createChannel, getChannel } = require("./controllers/user");
+
+var sockets = [];
+
+app.use(express.json());
 
 mongoose
   .connect("mongodb://localhost:27017/socket_chat")
@@ -30,41 +30,17 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-io.on("connection", (socket) => {
-  // var users = [];
-
-  socket.on("user joined", async (data) => {
-    // console.log(data);
-
-    var users = await createUser(data);
-    var messages = await getMessages();
-
-    // console.log("all users on join ===>", users);
-
-    io.emit("user joined", {
-      users: users,
-      messages: messages,
-    });
-  });
-
-  socket.on("user leave", async (data) => {
-    var users = await changeUserStatus(data);
-
-    // console.log("all users on leave ===>", users);
-
-    io.emit("user leave", users);
-  });
-
-  socket.on("is typing", (data) => {
-    io.emit("is typing", data);
-  });
-
-  socket.on("new message", async (data) => {
-    const messages = await addMessage(data);
-
-    io.emit("new message", messages);
-  });
+app.get("/testing", (req, res) => {
+  res.send("<h1>Testing Server is working...</h1>");
 });
+
+app.get("/getChannel/:participantId", getChannel);
+
+app.post("/createChannel", createChannel);
+
+// console.log("sockets", sockets);
+
+io.on("connection", (socket) => socketServer(socket, io));
 
 server.listen(3030, () => {
   console.log("server started on port: 3030");

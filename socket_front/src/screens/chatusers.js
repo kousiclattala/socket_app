@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Avatar, Box, Button, Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ function Chatusers({ client, userName, users, setUsers }) {
   const navigate = useNavigate();
 
   client.on("user leave", function (data) {
-    // console.log(data);
+    console.log("users leave===>", data);
     // setIsOnline(data.status);
     setUsers(data);
   });
